@@ -1,4 +1,4 @@
-module WB_Stage(
+module WB_Stage (
     input in_mem_to_reg,
     input in_reg_write,
     input [4:0] in_write_back_destination,
@@ -9,8 +9,8 @@ module WB_Stage(
     output [4:0] write_back_destination_out
 );
 
-assign write_data_out = (in_mem_to_reg === 1)? in_address : in_read_data;
-assign reg_write_out = in_reg_write;
-assign write_back_destination_out = in_write_back_destination;
+  assign write_data_out = (in_mem_to_reg === 1) ? in_address : in_read_data;
+  assign reg_write_out = in_reg_write;
+  assign write_back_destination_out = in_write_back_destination;
 
 endmodule

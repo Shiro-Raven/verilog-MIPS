@@ -1,4 +1,4 @@
-module ID_Stage(
+module ID_Stage (
     input clk,
     input [4:0] in_write_register,
     input [31:0] in_write_data,
@@ -22,33 +22,35 @@ module ID_Stage(
     output [2:0] ALUOp_out
 );
 
-assign instr_bits_15_11_out = in_instruction[15:11];
-assign instr_bits_20_16_out = in_instruction[20:16];
-assign new_pc_value_out = in_new_pc_value;
+  assign instr_bits_15_11_out = in_instruction[15:11];
+  assign instr_bits_20_16_out = in_instruction[20:16];
+  assign new_pc_value_out = in_new_pc_value;
 
-ID_Register_File Registers(// INPUT
-                           clk, 
-                           in_instruction, 
-                           in_write_data, 
-                           in_write_register, 
-                           in_RegWrite,
-                           // OUTPUT
-                           read_data1_out, 
-                           read_data2_out,
-			   extended_bits_out);
+  ID_Register_File Registers (  // INPUT
+      clk,
+      in_instruction,
+      in_write_data,
+      in_write_register,
+      in_RegWrite,
+      // OUTPUT
+      read_data1_out,
+      read_data2_out,
+      extended_bits_out
+  );
 
 
-ID_Control_Unit Control(// INPUT
-			in_instruction[31:26],
-                        // OUTPUT
-                        RegDst_out, 
-                        RegWrite_out,
-                        ALUSrc_out,
-                        ALUOp_out,
-                        MemWrite_out,
-                        MemRead_out,
-                        MemToReg_out,
-                        Branch_out,
-                        load_mode_out);
+  ID_Control_Unit Control (  // INPUT
+      in_instruction[31:26],
+      // OUTPUT
+      RegDst_out,
+      RegWrite_out,
+      ALUSrc_out,
+      ALUOp_out,
+      MemWrite_out,
+      MemRead_out,
+      MemToReg_out,
+      Branch_out,
+      load_mode_out
+  );
 
 endmodule
