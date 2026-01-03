@@ -21,3 +21,20 @@ cov*/
 transcript*
 sc_dpiheader.h
 vsim.dbg
+
+# Build directory (compiled test outputs from Makefile)
+build/
+
+# Icarus Verilog compiled outputs
+*.out
+
+# Test output files
+test/*.out
+test/*.vcd
+test/*.log
+test/*.dump
+
+# Common Verilog simulation outputs
+*.vcd
+*.dump
+*.log

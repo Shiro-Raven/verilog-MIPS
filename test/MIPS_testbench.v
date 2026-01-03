@@ -1,13 +1,11 @@
 module MIPS_testbench ();
 
-  // the clock
   reg clk;
   integer cycle_counter;
+  integer i;
 
-  // instantiate the mips processor
   MIPS mips (clk);
 
-  // get the clock working
   initial begin
     mips.IF_Stage_Module.instruction_memory[0] <= 32'h20090005;  // addi $t1, $0, 5
     mips.IF_Stage_Module.instruction_memory[1] <= 32'h200A0007;  // addi $t2, $0, 7
@@ -41,10 +39,8 @@ module MIPS_testbench ();
     end
   end
 
-  // incrememnt cycle counter at each positive edge
   always @(posedge clk) cycle_counter <= cycle_counter + 1;
 
-  // monitor the cycle counter
   initial begin
     $monitor("Cycle %d\n", cycle_counter,
              //--- PC Output ---//
@@ -91,20 +87,34 @@ module MIPS_testbench ();
              MIPS_testbench.mips.WB_address, "MemToReg = %b\n", MIPS_testbench.mips.WB_mem_to_reg,
              //--- End MEM Stage Output ---//
              "------------------------------------------------------------\n",
-             "Register File At the End of Cycle: %p\n",
-             MIPS_testbench.mips.ID_Stage_Module.Registers.registers,
+             "Register File At the End of Cycle:\n",
              "==============================================================\n",
              "==============================================================");
   end
 
-  // stop after program ends
-  // expected register file:
+  // Expected register file:
   // {ra: 0, fp:0, sp:4000, gp:0,k1:0, k0:0,t9 lhu:65280,t8 lh:4294967040,s7:0,s6:1,s5:2,s4:20,s3:7,s2:5,s1:2,
   //  s0:12,t7:4095,t6:4095,t5:7,t4:1,t3:42967276,t2:7,t1:5,t0:0,a3:0,a2:0,a1:0,a0:0,v1:0,v2:0,zero:0}
   initial begin
-    #5000 $display("Register File: %p", MIPS_testbench.mips.ID_Stage_Module.Registers.registers);
-    $display("Data Memory (Bytes): %p", MIPS_testbench.mips.MEM_Stage_Module.mem_ram.ram);
-    $stop;
+    #5000 begin
+      $display("\n==============================================================");
+      $display("Register File:");
+      $display("==============================================================");
+      for (i = 0; i < 32; i = i + 1) begin
+        $display("Register[%2d] = %d (0x%h)", i,
+                 MIPS_testbench.mips.ID_Stage_Module.Registers.registers[i],
+                 MIPS_testbench.mips.ID_Stage_Module.Registers.registers[i]);
+      end
+      $display("\n==============================================================");
+      $display("Data Memory (first 100 bytes):");
+      $display("==============================================================");
+      for (i = 0; i < 100; i = i + 1) begin
+        if (i % 16 == 0) $write("\n[%4d] ", i);
+        $write("%02h ", MIPS_testbench.mips.MEM_Stage_Module.mem_ram.ram[i]);
+      end
+      $display("\n");
+      $finish;
+    end
   end
 
 
